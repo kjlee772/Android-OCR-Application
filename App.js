@@ -55,6 +55,7 @@ export default class App extends Component {
         };
         launchImageLibrary(options, (response) => {
             console.log('Response = ', response['assets'][0].uri);
+            console.log(response.data);
             
             if (response.didCancel) {
                 console.log('User cancelled image picker');
@@ -73,7 +74,7 @@ export default class App extends Component {
                 // console.log('response', JSON.stringify(response));
                 this.setState({
                     filePath: response,
-                    fileData: response.data,
+                    fileData: response['assets'][0].uri,
                     fileUri: response['assets'][0].uri
                 });
             }
@@ -102,7 +103,7 @@ export default class App extends Component {
                 console.log('response', JSON.stringify(response));
                 this.setState({
                     filePath: response,
-                    fileData: response.data,
+                    fileData: response['assets'][0].uri,
                     fileUri: response['assets'][0].uri
                 });
             }
@@ -123,13 +124,11 @@ export default class App extends Component {
 
     renderFileUri() {
         if (this.state.fileUri) {
-          return <Image
-            source={{ uri: this.state.fileUri }}
+          return <Image source={{ uri: this.state.fileUri }}
             style={styles.images}
           />
         } else {
-            return <Image
-            source={require('./wakeupcat.jpg')}
+            return <Image source={require('./wakeupcat.jpg')}
             style={styles.images}
           />
         }
