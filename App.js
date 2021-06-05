@@ -10,7 +10,8 @@ import {
     Image,
     Button,
     Dimensions,
-    TouchableOpacity
+    TouchableOpacity,
+    ActivityIndicator
 } from 'react-native';
 
 import {
@@ -29,6 +30,7 @@ const options = {
         path: 'images',
     },
 };
+
 export default class App extends Component {
     constructor(props) {
         super(props)
@@ -38,7 +40,7 @@ export default class App extends Component {
                 uri: ''
             },
             fileData: '',
-            fileUri: ''
+            fileUri: '',
         }
     }
     
@@ -109,6 +111,10 @@ export default class App extends Component {
             }
         });
     }
+    
+    touchtest = () => {
+        console.log("touch");
+    }
 
     renderFileData() {
         if (this.state.fileData) {
@@ -124,41 +130,42 @@ export default class App extends Component {
 
     renderFileUri() {
         if (this.state.fileUri) {
-          return <Image source={{ uri: this.state.fileUri }}
-            style={styles.images}
-          />
+          return <TouchableOpacity onPress={this.touchtest}>
+              <Image source={{ uri: this.state.fileUri }}
+                style={styles.images}
+              />
+              </TouchableOpacity>
         } else {
-            return <Image source={require('./wakeupcat.jpg')}
-            style={styles.images}
-          />
+            return <TouchableOpacity onPress={this.touchtest}>
+                <Image source={require('./wakeupcat.jpg')}
+                style={styles.images}
+                />
+                </TouchableOpacity>
         }
     }
+
 
     render() {
         return (
             <Fragment>
-                <StatusBar barStyle="dark-content" />
                 <SafeAreaView>
-                    <View style={styles.body}>
-                        <Text style={{textAlign:'center',fontSize:20,paddingBottom:10}} >Pick Images from Camera & Gallery</Text>
-                        <View style={styles.ImageSections}>
-                            <View>
-                                {this.renderFileData()}
-                                <Text  style={{textAlign:'center'}}>Base 64 String</Text>
-                            </View>
-                            <View>
-                                {this.renderFileUri()}
-                                <Text style={{textAlign:'center'}}>File Uri</Text>
-                            </View>
+                    <View style={styles.container}>
+                        <View style={styles.image_section}>
+                            {this.renderFileUri()}
                         </View>
 
-                        <View style={styles.btnParentSection}>
-                            <TouchableOpacity onPress={this.chooseImage} style={styles.btnSection}  >
-                                <Text style={styles.btnText}>Choose File</Text>
+                        <View style={styles.button_section}>
+                            <TouchableOpacity onPress={this.launchCamera} style={styles.btn}  >
+                                <Text style={styles.btn_text}>사진 촬영하기</Text>
                             </TouchableOpacity>
-
-                            <TouchableOpacity onPress={this.launchCamera} style={styles.btnSection}  >
-                                <Text style={styles.btnText}>Directly Launch Camera</Text>
+                            <TouchableOpacity onPress={this.chooseImage} style={styles.btn}  >
+                                <Text style={styles.btn_text}>사진 불러오기</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.btn}  >
+                                <Text style={styles.btn_text}>ARCHIVE</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.btn}  >
+                                <Text style={styles.btn_text}>사용방법</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -173,33 +180,41 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lighter,
   },
 
-  body: {
+  container: {
     backgroundColor: Colors.white,
     justifyContent: 'center',
     borderColor: 'black',
     borderWidth: 1,
     height: Dimensions.get('screen').height - 20,
-    width: Dimensions.get('screen').width
+    width: Dimensions.get('screen').width,
   },
-  ImageSections: {
+  image_section: {
     display: 'flex',
-    flexDirection: 'row',
+    // flexDirection: 'row',
     paddingHorizontal: 8,
     paddingVertical: 8,
-    justifyContent: 'center'
-  },
-  images: {
-    width: 150,
-    height: 150,
+    justifyContent: 'center',
+    flex:2,
+    backgroundColor: '#CCFFFF',
+},
+images: {
+    // height: Dimensions.get('screen').height,
+    // width: Dimensions.get('screen').width,
+    height: '100%',
+    width: '100%',
     borderColor: 'black',
     borderWidth: 1,
-    marginHorizontal: 3
+    marginHorizontal: 3,
+    resizeMode: 'stretch',
   },
-  btnParentSection: {
+  button_section: {
     alignItems: 'center',
-    marginTop:10
+    marginTop:10,
+    flex:1,
+    justifyContent:'flex-end',
+    marginBottom:20,
   },
-  btnSection: {
+  btn: {
     width: 225,
     height: 50,
     backgroundColor: '#DCDCDC',
@@ -208,10 +223,10 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     marginBottom:10
   },
-  btnText: {
+  btn_text: {
     textAlign: 'center',
     color: 'gray',
-    fontSize: 14,
+    fontSize: 20,
     fontWeight:'bold'
   }
 });
@@ -241,3 +256,4 @@ const styles = StyleSheet.create({
 //         "width": 1080
 //     }
 // ]
+
