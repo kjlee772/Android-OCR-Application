@@ -22,6 +22,10 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+// import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+// const stack = createStackNavigator();
+
 const options = {
     title: 'Select Avatar',
     customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
@@ -176,59 +180,59 @@ export default class App extends Component {
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
+    scrollView: {
+        backgroundColor: Colors.lighter,
+    },
 
-  container: {
-    backgroundColor: Colors.white,
-    justifyContent: 'center',
-    borderColor: 'black',
-    borderWidth: 1,
-    height: Dimensions.get('screen').height - 20,
-    width: Dimensions.get('screen').width,
-  },
-  image_section: {
-    display: 'flex',
-    // flexDirection: 'row',
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    justifyContent: 'center',
-    flex:2,
-    backgroundColor: '#CCFFFF',
-},
-images: {
-    // height: Dimensions.get('screen').height,
-    // width: Dimensions.get('screen').width,
-    height: '100%',
-    width: '100%',
-    borderColor: 'black',
-    borderWidth: 1,
-    marginHorizontal: 3,
-    resizeMode: 'stretch',
-  },
-  button_section: {
-    alignItems: 'center',
-    marginTop:10,
-    flex:1,
-    justifyContent:'flex-end',
-    marginBottom:20,
-  },
-  btn: {
-    width: 225,
-    height: 50,
-    backgroundColor: '#DCDCDC',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 3,
-    marginBottom:10
-  },
-  btn_text: {
-    textAlign: 'center',
-    color: 'gray',
-    fontSize: 20,
-    fontWeight:'bold'
-  }
+    container: {
+        backgroundColor: Colors.white,
+        justifyContent: 'center',
+        borderColor: 'black',
+        borderWidth: 1,
+        height: Dimensions.get('screen').height - 20,
+        width: Dimensions.get('screen').width,
+    },
+
+    image_section: {
+        display: 'flex',
+        paddingHorizontal: 8,
+        paddingVertical: 8,
+        justifyContent: 'center',
+        flex:2,
+        backgroundColor: '#CCFFFF',
+    },
+
+    images: {
+        height: '100%',
+        width: '100%',
+        resizeMode: 'contain',
+        backgroundColor:'black',
+    },
+
+    button_section: {
+        alignItems: 'center',
+        marginTop:10,
+        flex:1,
+        justifyContent:'flex-end',
+        marginBottom:20,
+    },
+
+    btn: {
+        width: 225,
+        height: 50,
+        backgroundColor: '#DCDCDC',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 3,
+        marginBottom:10
+    },
+
+    btn_text: {
+        textAlign: 'center',
+        color: 'gray',
+        fontSize: 20,
+        fontWeight:'bold'
+    }
 });
 
 
@@ -256,4 +260,3 @@ images: {
 //         "width": 1080
 //     }
 // ]
-
