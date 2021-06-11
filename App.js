@@ -134,11 +134,11 @@ export default class App extends Component {
 
     renderFileUri() {
         if (this.state.fileUri) {
-          return <TouchableOpacity onPress={this.touchtest}>
-              <Image source={{ uri: this.state.fileUri }}
-                style={styles.images}
-              />
-              </TouchableOpacity>
+            return <TouchableOpacity onPress={this.touchtest}>
+                <Image source={{ uri: this.state.fileUri }}
+                    style={styles.images}
+                />
+                </TouchableOpacity>
         } else {
             return <TouchableOpacity onPress={this.touchtest}>
                 <Image source={require('./wakeupcat.jpg')}
