@@ -12,6 +12,8 @@ target 'ocr_project' do
     :hermes_enabled => false
   )
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   target 'ocr_projectTests' do
     inherit! :complete
     # Pods for testing
