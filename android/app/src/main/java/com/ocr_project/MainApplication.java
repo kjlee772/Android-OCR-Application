@@ -29,6 +29,13 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
           return packages;
         }
+        // @Override
+        // protected List<ReactPackage> getPackages() {
+        //   return Arrays.<ReactPackage>asList(
+        //     new MainReactPackage(), // <---- add comma
+        //     new RNFSPackage() // <---------- add package
+        //   );
+        // }
 
         @Override
         protected String getJSMainModuleName() {

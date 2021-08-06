@@ -1,37 +1,11 @@
-import React, { Fragment, Component } from 'react';
+import React from 'react';
+import { StyleSheet, View, Text, Image, Dimensions, TouchableOpacity, } from 'react-native';
+
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import {
-    SafeAreaView,
-    StyleSheet,
-    ScrollView,
-    View,
-    Text,
-    StatusBar,
-    Image,
-    Button,
-    Dimensions,
-    TouchableOpacity,
-    ActivityIndicator
-} from 'react-native';
+import ImagePicker from 'react-native-image-crop-picker';
+import * as RNFS from 'react-native-fs';
 
-import {
-    Header,
-    LearnMoreLinks,
-    Colors,
-    DebugInstructions,
-    ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const options = {
-    title: 'Select Avatar',
-    customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
-    storageOptions: {
-        skipBackup: true,
-        path: 'images',
-    },
-};
-
-export default class App extends Component {
+export default class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -41,7 +15,13 @@ export default class App extends Component {
             },
             fileData: '',
             fileUri: '',
+            base_64: '',
+            mime: '',
+            path: '',
         }
+        // console.log("ImagePicker: " + ImagePicker);
+        // console.log("openPicker: " + ImagePicker.openPicker);
+        // console.log("openCamera: " + ImagePicker.openCamera);
     }
 
     chooseImage = () => {
@@ -54,7 +34,7 @@ export default class App extends Component {
                 skipBackup: true,
                 path: 'images',
             },
-            includeBase64: true,
+            // includeBase64: true,
         };
         launchImageLibrary(options, (response) => {
             if (response.didCancel) {
@@ -82,8 +62,7 @@ export default class App extends Component {
             }
         });
     }
-
-    launchCamera = () => {
+    launchCamera() {
         let options = {
             storageOptions: {
                 skipBackup: true,
@@ -125,13 +104,13 @@ export default class App extends Component {
 
     renderFileUri() {
         if (this.state.fileUri) {
-            return <TouchableOpacity onPress={() => this.move_screen('Image')}>
+            return <TouchableOpacity t_uri={this.state} onPress={() => this.edit_image()}>
                 <Image source={{ uri: this.state.fileUri }}
                     style={styles.images}
                 />
             </TouchableOpacity>
         } else {
-            return <TouchableOpacity onPress={() => this.move_screen('Image')}>
+            return <TouchableOpacity onPress={() => this.edit_image()}>
                 <Image source={require('./wakeupcat.jpg')}
                     style={styles.images}
                 />
@@ -139,66 +118,82 @@ export default class App extends Component {
         }
     }
 
-    image_upload(){
-        fetch('221.158.52.168:8888/', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                imgsource: this.state.filePath.assets[0].base64,
-            }),
-        })
+    edit_image() {
+        ImagePicker.openPicker({
+            width: 2500,
+            height: 2500,
+            cropping: true,
+            includeBase64: true,
+            freeStyleCropEnabled: true,
+        }).then(image => {
+            console.log(image.size);
+            this.setState({
+                base_64: image.data,
+                mime: image.mime,
+                path: image.path,
+            })
+        });
     }
 
     move_screen(temp) {
+        ImagePicker.clean().then(() => {
+            console.log('removed all tmp images from tmp directory');
+        }).catch(e => {
+            alert(e);
+        });
         this.props.navigation.navigate(temp);
+    }
+
+    render_img() {
+        if (this.state.base_64) {
+            console.log("tlqkf")
+            // console.log(this.state.mime)
+            // console.log(this.state.base_64)
+            return <Image style={{width:300,height:300}} source={{uri: `data:${this.state.mime};base64,${this.state.base_64}`}} />
+            // return <Image style={{ width: 300, height: 300 }} source={{ uri: this.state.path }} />
+        }
     }
 
     render() {
         return (
-            <Fragment>
-                <SafeAreaView>
-                    <View style={styles.container}>
-                        <View style={styles.image_section}>
-                            {this.renderFileUri()}
-                        </View>
-                        <View style={styles.button_section}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <TouchableOpacity onPress={this.launchCamera} style={styles.btn}  >
-                                    <Text style={styles.btn_text}>사진 촬영하기</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={this.chooseImage} style={styles.btn}  >
-                                    <Text style={styles.btn_text}>사진 불러오기</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <TouchableOpacity style={styles.btn} onPress={() => this.move_screen('Ocr')}  >
-                                <Text style={styles.btn_text}>텍스트 추출하기</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.btn} onPress={() => this.move_screen('Storage')}  >
-                                <Text style={styles.btn_text}>ARCHIVE</Text>
-                            </TouchableOpacity>
-                        </View>
+            <View style={styles.container}>
+                <View style={styles.image_section}>
+                    {this.renderFileUri()}
+                    {this.render_img()}
+                </View>
+                <View style={styles.button_section}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity onPress={this.launchCamera} style={styles.btn}  >
+                            <Text style={styles.btn_text}>사진 촬영하기</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={this.chooseImage} style={styles.btn}  >
+                            <Text style={styles.btn_text}>사진 불러오기</Text>
+                        </TouchableOpacity>
                     </View>
-                </SafeAreaView>
-            </Fragment>
+                    <TouchableOpacity style={styles.btn} onPress={() => this.move_screen('Ocr')}  >
+                        <Text style={styles.btn_text}>텍스트 추출하기</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.btn} onPress={() => this.move_screen('Storage')}  >
+                        <Text style={styles.btn_text}>ARCHIVE</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         );
     }
 };
 
 const styles = StyleSheet.create({
-    scrollView: {
-        backgroundColor: Colors.lighter,
-    },
-
     container: {
-        backgroundColor: Colors.white,
+        backgroundColor: 'white',
         justifyContent: 'center',
         borderColor: 'black',
         borderWidth: 1,
         height: Dimensions.get('screen').height - 20,
         width: Dimensions.get('screen').width,
+    },
+
+    scrollView: {
+        backgroundColor: 'white',
     },
 
     image_section: {
