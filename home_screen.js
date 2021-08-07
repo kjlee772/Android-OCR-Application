@@ -18,6 +18,7 @@ export default class App extends React.Component {
             base_64: '',
             mime: '',
             path: '',
+            Res: '',
         }
         // console.log("ImagePicker: " + ImagePicker);
         // console.log("openPicker: " + ImagePicker.openPicker);
@@ -120,13 +121,13 @@ export default class App extends React.Component {
 
     edit_image() {
         ImagePicker.openPicker({
-            width: 2500,
-            height: 2500,
+            width: 3000,
+            height: 3000,
             cropping: true,
             includeBase64: true,
             freeStyleCropEnabled: true,
         }).then(image => {
-            console.log(image.size);
+            console.log('path: '+image.path);
             this.setState({
                 base_64: image.data,
                 mime: image.mime,
@@ -147,11 +148,33 @@ export default class App extends React.Component {
     render_img() {
         if (this.state.base_64) {
             console.log("tlqkf")
+            // console.log(this.state.base_64);
             // console.log(this.state.mime)
             // console.log(this.state.base_64)
-            return <Image style={{width:300,height:300}} source={{uri: `data:${this.state.mime};base64,${this.state.base_64}`}} />
+            return <Image style={{ width: 300, height: 300 }} source={{ uri: `data:${this.state.mime};base64,${this.state.base_64}` }} />
             // return <Image style={{ width: 300, height: 300 }} source={{ uri: this.state.path }} />
         }
+    }
+
+    ocr = () => {
+        fetch('http://221.158.52.168:3001/ocr', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                data: this.state.base_64,
+                name: 'temp1',
+            }),
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Here: " + data.Res)
+            })
+            .catch(err => {
+                console.log(err.message, err.code);
+            });
     }
 
     render() {
@@ -170,7 +193,7 @@ export default class App extends React.Component {
                             <Text style={styles.btn_text}>사진 불러오기</Text>
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={styles.btn} onPress={() => this.move_screen('Ocr')}  >
+                    <TouchableOpacity style={styles.btn} onPress={() => this.ocr()}  >
                         <Text style={styles.btn_text}>텍스트 추출하기</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.btn} onPress={() => this.move_screen('Storage')}  >
