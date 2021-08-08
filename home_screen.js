@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, Dimensions, TouchableOpacity, } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Pressable, } from 'react-native';
 
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -12,7 +12,7 @@ const image_option = {
 
 export default class App extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             file_uri: null,
             file_size: null,
@@ -89,6 +89,10 @@ export default class App extends React.Component {
         });
     }
 
+    shouldComponentUpdate(prevProps, prevState) {
+        return this.state.file_uri != prevState.file_uri;
+    }
+
     render_image() {
         if (this.state.file_uri) {
             this.send_image();
@@ -108,7 +112,7 @@ export default class App extends React.Component {
     }
 
     move_screen(temp) {
-        this.props.navigation.navigate(temp, { file_uri: this.state.file_uri, file_data: this.state.file_data});
+        this.props.navigation.navigate(temp, { file_uri: this.state.file_uri, file_data: this.state.file_data });
     }
 
     send_image() {
@@ -150,17 +154,11 @@ export default class App extends React.Component {
                 this.setState({
                     file_data: res.Res,
                 });
+                this.move_screen('Ocr');
             })
             .catch(err => {
                 console.log('Ocr 문제: ' + err.message, err.code);
             });
-    }
-
-    test(){
-        console.log('setState 테스트 called');
-        this.setState({
-            file_size: null,
-        });
     }
 
     render() {
@@ -175,7 +173,7 @@ export default class App extends React.Component {
                         <TouchableOpacity style={styles.touch_btn} onPress={() => this.chooseImage()}><Text style={styles.text_btn}>사진 불러오기</Text></TouchableOpacity>
                     </View>
                     <TouchableOpacity style={[styles.touch_btn, { marginBottom: 10, width: 200 }]} onPress={() => this.ocr()} ><Text style={styles.text_btn}>텍스트 추출하기</Text></TouchableOpacity>
-                    <TouchableOpacity style={[styles.touch_btn, { width: 120 }]} onPress={()=>this.test()} ><Text style={styles.text_btn}>저장소</Text></TouchableOpacity>
+                    <TouchableOpacity style={[styles.touch_btn, { width: 120 }]} ><Text style={styles.text_btn}>저장소</Text></TouchableOpacity>
                 </View>
             </View>
         );
