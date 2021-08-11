@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, Pressable, } from 'rea
 
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
+
 import * as RNFS from 'react-native-fs';
 
 const image_option = {
@@ -18,7 +19,7 @@ export default class App extends React.Component {
             file_size: null,
             file_base64: null,
             file_name: null,
-            file_data: null,
+            file_data: '현재 Google Vision은 연동되지 않고 있음 테스트하는 중임\n테스트 중입니다.\n로컬 스토리지 테스트 중',
         }
     }
 
@@ -111,8 +112,11 @@ export default class App extends React.Component {
         }
     }
 
-    move_screen(temp) {
-        this.props.navigation.navigate(temp, { file_uri: this.state.file_uri, file_data: this.state.file_data });
+    move_screen_ocr() {
+        this.props.navigation.navigate('Ocr', { file_uri: this.state.file_uri, file_data: this.state.file_data });
+    }
+    move_screen_storage() {
+        this.props.navigation.navigate('Storage');
     }
 
     send_image() {
@@ -138,27 +142,29 @@ export default class App extends React.Component {
     }
     ocr() {
         console.log('ocr called');
-        fetch('http://221.158.52.168:3001/ocr', {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({
-                name: this.state.file_name,
-            }),
-        })
-            .then(res => res.json())
-            .then(res => {
-                console.log(res.Res);
-                this.setState({
-                    file_data: res.Res,
-                });
-                this.move_screen('Ocr');
-            })
-            .catch(err => {
-                console.log('Ocr 문제: ' + err.message, err.code);
-            });
+        this.move_screen_ocr();
+
+        // fetch('http://221.158.52.168:3001/ocr', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-type': 'application/json',
+        //         'Accept': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         name: this.state.file_name,
+        //     }),
+        // })
+        //     .then(res => res.json())
+        //     .then(res => {
+        //         console.log(res.Res);
+        //         this.setState({
+        //             file_data: res.Res,
+        //         });
+        //         this.move_screen_ocr();
+        //     })
+        //     .catch(err => {
+        //         console.log('Ocr 문제: ' + err.message, err.code);
+        //     });
     }
 
     render() {
@@ -173,7 +179,7 @@ export default class App extends React.Component {
                         <TouchableOpacity style={styles.touch_btn} onPress={() => this.chooseImage()}><Text style={styles.text_btn}>사진 불러오기</Text></TouchableOpacity>
                     </View>
                     <TouchableOpacity style={[styles.touch_btn, { marginBottom: 10, width: 200 }]} onPress={() => this.ocr()} ><Text style={styles.text_btn}>텍스트 추출하기</Text></TouchableOpacity>
-                    <TouchableOpacity style={[styles.touch_btn, { width: 120 }]} ><Text style={styles.text_btn}>저장소</Text></TouchableOpacity>
+                    <TouchableOpacity style={[styles.touch_btn, { width: 120 }]} onPress={() => this.move_screen_storage()} ><Text style={styles.text_btn}>저장소</Text></TouchableOpacity>
                 </View>
             </View>
         );

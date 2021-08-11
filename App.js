@@ -9,18 +9,18 @@ import storage_screen from './storage_screen';
 
 const Stack = createNativeStackNavigator();
 
-export default class App extends React.Component{
-  constructor(props){
+export default class App extends React.Component {
+  constructor(props) {
     super(props);
-    this.state={
+    this.state = {
 
     }
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown:false}}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={home_screen} />
           <Stack.Screen name="Image" component={image_screen} />
           <Stack.Screen name="Ocr" component={ocr_screen} />
@@ -33,5 +33,5 @@ export default class App extends React.Component{
 }
 
 // const styles = StyleSheet.create({
-  
+
 // });
