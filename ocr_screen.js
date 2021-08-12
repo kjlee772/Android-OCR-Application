@@ -10,7 +10,7 @@ export default class ocr_screen extends React.Component {
             save_data: {
                 file_uri: this.props.route.params.file_uri,
                 file_data: this.props.route.params.file_data,
-                subject: null,
+                subject: this.props.route.params.subject,
             }
         }
     }
@@ -26,6 +26,7 @@ export default class ocr_screen extends React.Component {
     }
 
     render() {
+
         return (
             <View style={{ flex: 1, backgroundColor: '#DCF5FA' }}>
                 <ScrollView>
@@ -36,6 +37,7 @@ export default class ocr_screen extends React.Component {
                         <View style={{ width: '80%' }}>
                             <TextInput style={{ backgroundColor: 'pink', color: 'black', marginBottom: 5, textAlign: 'center', fontSize: 22, fontWeight: 'bold', borderRadius: 5 }}
                                 placeholder={'주제를 입력해주세요.'}
+                                value={this.state.save_data.subject}
                                 placeholderTextColor={'black'}
                                 onChangeText={(ch) => { this.setState({ save_data: { subject: ch, file_uri: this.state.save_data.file_uri, file_data: this.state.save_data.file_data } }) }} />
                         </View>
@@ -51,6 +53,7 @@ export default class ocr_screen extends React.Component {
                 </ScrollView>
             </View>
         );
+
     }
 
 }

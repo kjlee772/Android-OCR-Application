@@ -1,65 +1,72 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
 
 export default class storage_screen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            all_key: null,
-        }
-        this.get_all_keys()
-    }
-
-    get_all_keys = async () => {
-        let keys = []
-        try {
-            keys = await AsyncStorage.getAllKeys();
-            this.setState({
-                all_key: keys
-            })
-        } catch (e) {
-            console.log('!!! get all key error');
+            all_data: this.props.route.params.all_data,
         }
     }
 
-    show_key() {
-        console.log(this.state.all_key);
+    show_value() {
+        console.log(this.state.all_data);
     }
 
-    show_value = async (key) => {
-        try {
-            let temp = await AsyncStorage.getItem(key);
-            let value = JSON.parse(temp);
-            let file_uri = value.file_uri;
-            let file_data = value.file_data;
-            let subject = value.subject;
-            // console.log(typeof value);
-            // console.log('URI: '+ file_uri);
-            // console.log('DATA: '+ file_data);
-            // console.log('SUBJECT: '+ subject);
-            console.log('show: '+ value.file_uri);
-            return value;
-        } catch (e) {
-            console.log('!!! get error');
+    make_view() {
+        console.log(this.state.all_data.length);
+        let temp = this.state.all_data.map(([key, value]) => {
+            return (
+                <TouchableOpacity key={key}>
+                    <View>
+                        <View>
+                            <Image style={{ width: 200, height: 200 }} source={{ uri: value.file_uri }} />
+                        </View>
+                        <View>
+                            <Text>{value.subject}</Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            )
         }
+        )
+        console.log(temp)
     }
 
-    make_view(){
-        const test = this.state.all_key.map((unit, idx) => {
-            const value = this.show_value(unit);
-            console.log(value.file_uri)
-        })
+    move_detail(temp){
+        this.props.navigation.navigate('Ocr', {file_uri: temp.file_uri, file_data:temp.file_data, subject:temp.subject});
     }
 
     render() {
+        let temp = this.state.all_data.map(([key, value]) => {
+            return (
+                // <TouchableOpacity key={key} style={{ marginBottom: 3,}}>
+                //     <View style={{ flexDirection: 'row' }}>
+                //         <View>
+                //             <Image style={{ width: Dimensions.get('window').width / 2, height: Dimensions.get('window').width / 2, resizeMode: 'contain' }} source={{ uri: value.file_uri }} />
+                //         </View>
+                //         <View style={{ justifyContent: 'center', marginLeft: 3 }}>
+                //             <Text style={{ fontSize: 25, fontWeight: 'bold', }}>{value.subject}</Text>
+                //             {/* <TextInput editable={false} maxLength={50} multiline={true} style={{ color:'black', width: Dimensions.get('window').width / 2 - 5, position: 'absolute', top: 55 }} >{value.file_data}</TextInput> */}
+                //         </View>
+                //     </View>
+                // </TouchableOpacity>
+                <TouchableOpacity onPress={()=>this.move_detail(value)} key={key} style={{ marginBottom: 3, }}>
+                    <View style={{flexDirection:'row',alignItems:'center'}}>
+                        <Image style={{ width: Dimensions.get('window').width / 2, height: Dimensions.get('window').width / 2, }} source={{ uri: value.file_uri }} />
+                        <Text style={{ fontSize: 22, fontWeight: 'bold', marginLeft:3}}>{value.subject}</Text>
+                    </View>
+                </TouchableOpacity>
+            )
+        })
         return (
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <TouchableOpacity style={styles.touch_btn} onPress={() => this.show_key()} ><Text style={styles.text_btn}>키</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.touch_btn} onPress={() => this.show_value(this.state.all_key[0])} ><Text style={styles.text_btn}>value</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.touch_btn} onPress={() => this.make_view()} ><Text style={styles.text_btn}>make</Text></TouchableOpacity>
-            </View>
+            <ScrollView>
+                <View >
+                    {temp}
+                    <TouchableOpacity style={styles.touch_btn} onPress={() => this.show_value()} ><Text style={styles.text_btn}>값</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.touch_btn}  ><Text style={styles.text_btn}>삭제</Text></TouchableOpacity>
+                </View>
+            </ScrollView>
         );
     }
 
