@@ -145,7 +145,7 @@ export default class App extends React.Component {
 
     send_image() {
         console.log('send image called');
-        fetch('http://221.158.52.168:3001/sendImage', {
+        fetch('/sendImage', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
@@ -171,7 +171,7 @@ export default class App extends React.Component {
         }
         else{
             console.log('ocr called');
-            fetch('http://221.158.52.168:3001/ocr', {
+            fetch('/ocr', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
