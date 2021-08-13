@@ -19,6 +19,7 @@ export default class ocr_screen extends React.Component {
         try {
             const json_value = JSON.stringify(value);
             await AsyncStorage.setItem(key, json_value);
+            alert('저장 완료');
         } catch (e) {
             console.log('!!! save error');
         }
@@ -26,7 +27,6 @@ export default class ocr_screen extends React.Component {
     }
 
     render() {
-
         return (
             <View style={{ flex: 1, backgroundColor: '#DCF5FA' }}>
                 <ScrollView>
@@ -53,9 +53,7 @@ export default class ocr_screen extends React.Component {
                 </ScrollView>
             </View>
         );
-
     }
-
 }
 
 const styles = StyleSheet.create({

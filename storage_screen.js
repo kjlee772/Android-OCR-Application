@@ -40,17 +40,6 @@ export default class storage_screen extends React.Component {
     render() {
         let temp = this.state.all_data.map(([key, value]) => {
             return (
-                // <TouchableOpacity key={key} style={{ marginBottom: 3,}}>
-                //     <View style={{ flexDirection: 'row' }}>
-                //         <View>
-                //             <Image style={{ width: Dimensions.get('window').width / 2, height: Dimensions.get('window').width / 2, resizeMode: 'contain' }} source={{ uri: value.file_uri }} />
-                //         </View>
-                //         <View style={{ justifyContent: 'center', marginLeft: 3 }}>
-                //             <Text style={{ fontSize: 25, fontWeight: 'bold', }}>{value.subject}</Text>
-                //             {/* <TextInput editable={false} maxLength={50} multiline={true} style={{ color:'black', width: Dimensions.get('window').width / 2 - 5, position: 'absolute', top: 55 }} >{value.file_data}</TextInput> */}
-                //         </View>
-                //     </View>
-                // </TouchableOpacity>
                 <TouchableOpacity onPress={()=>this.move_detail(value)} key={key} style={{ marginBottom: 3, }}>
                     <View style={{flexDirection:'row',alignItems:'center'}}>
                         <Image style={{ width: Dimensions.get('window').width / 2, height: Dimensions.get('window').width / 2, }} source={{ uri: value.file_uri }} />

@@ -129,8 +129,8 @@ export default class App extends React.Component {
         }
         else {
             return (
-                <TouchableOpacity style={{ width: '100%', height: '100%' }}>
-                    <Image source={require('./wakeupcat.jpg')} style={styles.images} />
+                <TouchableOpacity style={{ width: '100%', height: '100%' , backgroundColor:'black'}}>
+                    {/* <Image source={require('./wakeupcat.jpg')} style={styles.images} /> */}
                 </TouchableOpacity>
             );
         }
