@@ -145,7 +145,7 @@ export default class App extends React.Component {
 
     send_image() {
         console.log('send image called');
-        fetch('/sendImage', {
+        fetch('http://221.158.52.168:3001/sendImage', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
@@ -165,13 +165,13 @@ export default class App extends React.Component {
             });
     }
     ocr() {
-        // this.move_screen_ocr();
+        this.move_screen_ocr();
         if(this.state.file_uri == null){
             alert('사진을 선택해주세요.')
         }
         else{
             console.log('ocr called');
-            fetch('/ocr', {
+            fetch('http://221.158.52.168:3001/ocr', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
