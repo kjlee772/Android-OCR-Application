@@ -165,7 +165,7 @@ export default class App extends React.Component {
             });
     }
     ocr() {
-        this.move_screen_ocr();
+        // this.move_screen_ocr();
         if(this.state.file_uri == null){
             alert('사진을 선택해주세요.')
         }

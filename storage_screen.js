@@ -9,29 +9,29 @@ export default class storage_screen extends React.Component {
         }
     }
 
-    show_value() {
-        console.log(this.state.all_data);
-    }
+    // show_value() {
+    //     console.log(this.state.all_data);
+    // }
 
-    make_view() {
-        console.log(this.state.all_data.length);
-        let temp = this.state.all_data.map(([key, value]) => {
-            return (
-                <TouchableOpacity key={key}>
-                    <View>
-                        <View>
-                            <Image style={{ width: 200, height: 200 }} source={{ uri: value.file_uri }} />
-                        </View>
-                        <View>
-                            <Text>{value.subject}</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            )
-        }
-        )
-        console.log(temp)
-    }
+    // make_view() {
+    //     console.log(this.state.all_data.length);
+    //     let temp = this.state.all_data.map(([key, value]) => {
+    //         return (
+    //             <TouchableOpacity key={key}>
+    //                 <View>
+    //                     <View>
+    //                         <Image style={{ width: 200, height: 200 }} source={{ uri: value.file_uri }} />
+    //                     </View>
+    //                     <View>
+    //                         <Text>{value.subject}</Text>
+    //                     </View>
+    //                 </View>
+    //             </TouchableOpacity>
+    //         )
+    //     }
+    //     )
+    //     console.log(temp)
+    // }
 
     move_detail(temp){
         this.props.navigation.navigate('Ocr', {file_uri: temp.file_uri, file_data:temp.file_data, subject:temp.subject});
