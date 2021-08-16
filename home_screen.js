@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -20,7 +20,8 @@ export default class App extends React.Component {
             file_size: null,
             file_base64: null,
             file_name: null,
-            file_data: null,
+            // file_data: null,
+            file_data: '가나다라마바사아자차카타파하',
             all_key: null,
             all_data: null,
             subject: null,
@@ -91,28 +92,41 @@ export default class App extends React.Component {
         });
     }
     editImage() {
-        if(this.state.file_uri == null){
-            alert('사진을 선택해주세요.')
-        }
-        else{
-            console.log('edit image called');
-            ImagePicker.openCropper({
-                path: this.state.file_uri,
-                width: 1024,
-                height: 1024,
-                includeBase64: true,
-                freeStyleCropEnabled: true,
-            }).then(image => {
-                this.setState({
-                    file_uri: image.path,
-                    file_size: image.size,
-                    file_base64: image.data,
-                });
-            }).catch((err) => {
-                console.log('!!! edit error');
+        console.log('edit image called');
+        ImagePicker.openCropper({
+            path: this.state.file_uri,
+            width: 1024,
+            height: 1024,
+            includeBase64: true,
+            freeStyleCropEnabled: true,
+        }).then(image => {
+            this.setState({
+                file_uri: image.path,
+                file_size: image.size,
+                file_base64: image.data,
             });
-        }
+        }).catch((err) => {
+            console.log('!!! edit error');
+        });
     }
+
+    edit_alert = () =>
+        Alert.alert(
+            '사진을 편집하겠습니까?',
+            '',
+            [
+                {
+                    text: '예',
+                    onPress: () => this.editImage(),
+                },
+                {
+                    text: '아니오',
+                },
+            ],
+            {
+                cancelable: true,
+            }
+        );
 
     shouldComponentUpdate(prevProps, prevState) {
         return this.state.file_uri != prevState.file_uri;
@@ -120,24 +134,24 @@ export default class App extends React.Component {
 
     render_image() {
         if (this.state.file_uri) {
-            this.send_image();
+            // this.send_image();
             return (
-                <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.editImage()} >
+                <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.edit_alert()} >
                     <Image source={{ uri: this.state.file_uri }} style={styles.images} />
                 </TouchableOpacity>
             );
         }
         else {
             return (
-                <TouchableOpacity style={{ width: '100%', height: '100%' , backgroundColor:'black'}}>
-                    {/* <Image source={require('./wakeupcat.jpg')} style={styles.images} /> */}
+                <TouchableOpacity style={{ width: '100%', height: '100%', backgroundColor: 'black', justifyContent: 'center' }}>
+                    <Text style={{ color: 'white', textAlign: 'center', fontSize: 30, fontWeight: 'bold' }}>사진을{'\n'}선택해주세요</Text>
                 </TouchableOpacity>
             );
         }
     }
 
     move_screen_ocr() {
-        this.props.navigation.navigate('Ocr', { file_uri: this.state.file_uri, file_data: this.state.file_data, subject: this.state.subject });
+        this.props.navigation.navigate('Ocr', { file_name: this.state.file_name, file_uri: this.state.file_uri, file_data: this.state.file_data, subject: this.state.subject });
     }
     move_screen_storage() {
         this.props.navigation.navigate('Storage', { all_data: this.state.all_data });
@@ -145,7 +159,7 @@ export default class App extends React.Component {
 
     send_image() {
         console.log('send image called');
-        fetch('http://221.158.52.168:3001/sendImage', {
+        fetch('/sendImage', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
@@ -165,32 +179,43 @@ export default class App extends React.Component {
             });
     }
     ocr() {
-        // this.move_screen_ocr();
-        if(this.state.file_uri == null){
-            alert('사진을 선택해주세요.')
+        if (this.state.file_uri == null) {
+            Alert.alert(
+                '사진을 선택해주세요',
+                '',
+                [
+                    {
+                        text: 'OK'
+                    }
+                ],
+                {
+                    cancelable: true,
+                }
+            );
         }
-        else{
-            console.log('ocr called');
-            fetch('http://221.158.52.168:3001/ocr', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: this.state.file_name,
-                }),
-            })
-                .then(res => res.json())
-                .then(res => {
-                    this.setState({
-                        file_data: res.Res,
-                    });
-                    this.move_screen_ocr();
-                })
-                .catch(err => {
-                    console.log('Ocr 문제: ' + err.message, err.code);
-                });
+        else {
+            this.move_screen_ocr();
+            // console.log('ocr called');
+            // fetch('/ocr', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-type': 'application/json',
+            //         'Accept': 'application/json',
+            //     },
+            //     body: JSON.stringify({
+            //         name: this.state.file_name,
+            //     }),
+            // })
+            //     .then(res => res.json())
+            //     .then(res => {
+            //         this.setState({
+            //             file_data: res.Res,
+            //         });
+            //         this.move_screen_ocr();
+            //     })
+            //     .catch(err => {
+            //         console.log('Ocr 문제: ' + err.message, err.code);
+            //     });
         }
     }
 

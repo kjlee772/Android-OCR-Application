@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TextInput, ScrollView, Dimensions, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TextInput, ScrollView, Dimensions, TouchableOpacity, StyleSheet, Alert, } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -8,6 +8,7 @@ export default class ocr_screen extends React.Component {
         super(props);
         this.state = {
             save_data: {
+                file_name: this.props.route.params.file_name,
                 file_uri: this.props.route.params.file_uri,
                 file_data: this.props.route.params.file_data,
                 subject: this.props.route.params.subject,
@@ -16,14 +17,23 @@ export default class ocr_screen extends React.Component {
     }
 
     save = async (key, value) => {
-        try {
-            const json_value = JSON.stringify(value);
-            await AsyncStorage.setItem(key, json_value);
-            alert('저장 완료');
-        } catch (e) {
-            console.log('!!! save error');
+        if (this.state.save_data.subject == null || this.state.save_data.subject == '') {
+            Alert.alert(
+                '주제를 입력해주세요.'
+            );
         }
-        console.log('save success!!');
+        else {
+            try {
+                const json_value = JSON.stringify(value);
+                await AsyncStorage.setItem(key, json_value);
+                Alert.alert(
+                    '저장 완료',
+                );
+            } catch (e) {
+                console.log('!!! save error');
+            }
+            console.log('save success!!');
+        }
     }
 
     render() {
@@ -39,16 +49,16 @@ export default class ocr_screen extends React.Component {
                                 placeholder={'주제를 입력해주세요.'}
                                 value={this.state.save_data.subject}
                                 placeholderTextColor={'black'}
-                                onChangeText={(ch) => { this.setState({ save_data: { subject: ch, file_uri: this.state.save_data.file_uri, file_data: this.state.save_data.file_data } }) }} />
+                                onChangeText={(ch) => { this.setState({ save_data: { subject: ch, file_uri: this.state.save_data.file_uri, file_data: this.state.save_data.file_data, file_name: this.state.save_data.file_name } }) }} />
                         </View>
                         <View style={{ width: '99%' }}>
                             <TextInput style={{ backgroundColor: 'white', color: 'black', borderWidth: 1, borderRadius: 5 }}
                                 value={this.state.save_data.file_data} placeholderTextColor={'black'} multiline={true}
-                                onChangeText={(ch) => { this.setState({ save_data: { file_data: ch, file_uri: this.state.save_data.file_uri, subject: this.state.save_data.subject } }) }} />
+                                onChangeText={(ch) => { this.setState({ save_data: { file_data: ch, file_uri: this.state.save_data.file_uri, subject: this.state.save_data.subject, file_name: this.state.save_data.file_name } }) }} />
                         </View>
                     </View>
                     <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 5 }}>
-                        <TouchableOpacity style={styles.touch_btn} onPress={() => this.save(this.state.save_data.subject, this.state.save_data)} ><Text style={styles.text_btn}>저장하기</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.touch_btn} onPress={() => this.save(this.state.save_data.file_name, this.state.save_data)} ><Text style={styles.text_btn}>저장하기</Text></TouchableOpacity>
                     </View>
                 </ScrollView>
             </View>
