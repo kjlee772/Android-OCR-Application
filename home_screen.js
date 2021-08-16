@@ -159,24 +159,24 @@ export default class App extends React.Component {
 
     send_image() {
         console.log('send image called');
-        fetch('/sendImage', {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({
-                name: this.state.file_name,
-                data: this.state.file_base64,
-            }),
-        })
-            .then(res => res.json())
-            .then(res => {
-                console.log(res.message);
-            })
-            .catch(err => {
-                console.log('send image 문제: ' + err.message, err.code);
-            });
+        // fetch('/sendImage', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-type': 'application/json',
+        //         'Accept': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         name: this.state.file_name,
+        //         data: this.state.file_base64,
+        //     }),
+        // })
+        //     .then(res => res.json())
+        //     .then(res => {
+        //         console.log(res.message);
+        //     })
+        //     .catch(err => {
+        //         console.log('send image 문제: ' + err.message, err.code);
+        //     });
     }
     ocr() {
         if (this.state.file_uri == null) {
