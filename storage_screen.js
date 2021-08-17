@@ -1,19 +1,27 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Dimensions, } from 'react-native';
 
-import { CommonActions } from '@react-navigation/native';
-
+import { StackActions } from '@react-navigation/native';
 
 export default class storage_screen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            from: this.props.route.params.from,
             all_data: this.props.route.params.all_data,
         }
     }
 
+    test(){
+        console.log(this.state.all_data);
+        this.setState({
+            all_data: this.props.route.params.all_data,
+        })
+    }
+
     move_detail(temp) {
-        this.props.navigation.navigate('Ocr', { file_uri: temp.file_uri, file_data: temp.file_data, file_name: temp.file_name, subject: temp.subject, });
+        this.props.navigation.dispatch(StackActions.replace('Ocr', { file_uri: temp.file_uri, file_data: temp.file_data, file_name: temp.file_name, subject: temp.subject, from: 'storage'}));
+        // this.props.navigation.navigate('Ocr', { file_uri: temp.file_uri, file_data: temp.file_data, file_name: temp.file_name, subject: temp.subject, from: 'storage'});
     }
 
     render() {
@@ -31,7 +39,7 @@ export default class storage_screen extends React.Component {
             <ScrollView>
                 <View >
                     {temp}
-                    <TouchableOpacity style={styles.touch_btn}  ><Text style={styles.text_btn}>값</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.touch_btn} onPress={() => this.test()} ><Text style={styles.text_btn}>값</Text></TouchableOpacity>
                     <TouchableOpacity style={styles.touch_btn}  ><Text style={styles.text_btn}>삭제</Text></TouchableOpacity>
                 </View>
             </ScrollView>

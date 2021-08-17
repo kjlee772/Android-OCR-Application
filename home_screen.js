@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, Alert } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Alert, BackHandler } from 'react-native';
 
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -16,6 +16,7 @@ export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            from: 'home',
             file_uri: null,
             file_size: null,
             file_base64: null,
@@ -27,6 +28,7 @@ export default class App extends React.Component {
             subject: null,
         }
     }
+
     get_all_keys = async () => {
         let keys = []
         try {
@@ -151,10 +153,10 @@ export default class App extends React.Component {
     }
 
     move_screen_ocr() {
-        this.props.navigation.navigate('Ocr', { file_name: this.state.file_name, file_uri: this.state.file_uri, file_data: this.state.file_data, subject: this.state.subject });
+        this.props.navigation.navigate('Ocr', { file_name: this.state.file_name, file_uri: this.state.file_uri, file_data: this.state.file_data, subject: this.state.subject, from: this.state.from });
     }
     move_screen_storage() {
-        this.props.navigation.navigate('Storage', { all_data: this.state.all_data });
+        this.props.navigation.navigate('Storage', { all_data: this.state.all_data, from: this.state.from });
     }
 
     send_image() {
