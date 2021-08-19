@@ -136,7 +136,7 @@ export default class App extends React.Component {
 
     render_image() {
         if (this.state.file_uri) {
-            // this.send_image();
+            this.send_image();
             return (
                 <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.edit_alert()} >
                     <Image source={{ uri: this.state.file_uri }} style={styles.images} />
@@ -196,28 +196,32 @@ export default class App extends React.Component {
             );
         }
         else {
-            this.move_screen_ocr();
-            // console.log('ocr called');
-            // fetch('/ocr', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-type': 'application/json',
-            //         'Accept': 'application/json',
-            //     },
-            //     body: JSON.stringify({
-            //         name: this.state.file_name,
-            //     }),
-            // })
-            //     .then(res => res.json())
-            //     .then(res => {
-            //         this.setState({
-            //             file_data: res.Res,
-            //         });
-            //         this.move_screen_ocr();
-            //     })
-            //     .catch(err => {
-            //         console.log('Ocr 문제: ' + err.message, err.code);
-            //     });
+            // this.move_screen_ocr();
+            console.log('ocr called');
+            fetch('/ocr', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: this.state.file_name,
+                }),
+            })
+                .then(res => res.json())
+                .then(res => {
+                    this.setState({
+                        file_data: res.Res,
+                    });
+                    this.move_screen_ocr();
+                })
+                .catch(err => {
+                    console.log('Ocr 문제: ' + err.message, err.code);
+                    Alert.alert(
+                        '네트워크 문제',
+                        '다시 사진을 선택하고 실행해주세요.',
+                    );
+                });
         }
     }
 
