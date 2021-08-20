@@ -21,8 +21,7 @@ export default class App extends React.Component {
             file_size: null,
             file_base64: null,
             file_name: null,
-            // file_data: null,
-            file_data: '가나다라마바사아자차카타파하',
+            file_data: null,
             all_key: null,
             all_data: null,
             subject: null,
@@ -161,24 +160,24 @@ export default class App extends React.Component {
 
     send_image() {
         console.log('send image called');
-        // fetch('/sendImage', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-type': 'application/json',
-        //         'Accept': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         name: this.state.file_name,
-        //         data: this.state.file_base64,
-        //     }),
-        // })
-        //     .then(res => res.json())
-        //     .then(res => {
-        //         console.log(res.message);
-        //     })
-        //     .catch(err => {
-        //         console.log('send image 문제: ' + err.message, err.code);
-        //     });
+        fetch('http://221.158.52.168:3001/sendImage', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                name: this.state.file_name,
+                data: this.state.file_base64,
+            }),
+        })
+            .then(res => res.json())
+            .then(res => {
+                console.log(res.message);
+            })
+            .catch(err => {
+                console.log('send image 문제: ' + err.message, err.code);
+            });
     }
     ocr() {
         if (this.state.file_uri == null) {
@@ -198,7 +197,7 @@ export default class App extends React.Component {
         else {
             // this.move_screen_ocr();
             console.log('ocr called');
-            fetch('/ocr', {
+            fetch('http://221.158.52.168:3001/ocr', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
