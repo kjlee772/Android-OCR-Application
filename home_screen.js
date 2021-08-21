@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, Alert, BackHandler } from 'react-native';
+import React from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loading from './loading';
 
 import * as RNFS from 'react-native-fs';
 
@@ -21,10 +22,12 @@ export default class App extends React.Component {
             file_size: null,
             file_base64: null,
             file_name: null,
-            file_data: null,
+            file_data: '가나다라마바사아자차카타파하',
+            // file_data: null,
             all_key: null,
             all_data: null,
             subject: null,
+            loading_flag: false,
         }
     }
 
@@ -195,32 +198,36 @@ export default class App extends React.Component {
             );
         }
         else {
-            // this.move_screen_ocr();
+            this.setState({loading_flag: true});
             console.log('ocr called');
-            fetch('/ocr', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: this.state.file_name,
-                }),
-            })
-                .then(res => res.json())
-                .then(res => {
-                    this.setState({
-                        file_data: res.Res,
-                    });
-                    this.move_screen_ocr();
-                })
-                .catch(err => {
-                    console.log('Ocr 문제: ' + err.message, err.code);
-                    Alert.alert(
-                        '네트워크 문제',
-                        '다시 사진을 선택하고 실행해주세요.',
-                    );
-                });
+            setTimeout(() => {
+                // this.setState({loading_flag: false});
+                this.move_screen_ocr();
+            }, 3000);
+            // fetch('/ocr', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-type': 'application/json',
+            //         'Accept': 'application/json',
+            //     },
+            //     body: JSON.stringify({
+            //         name: this.state.file_name,
+            //     }),
+            // })
+            //     .then(res => res.json())
+            //     .then(res => {
+            //         this.setState({
+            //             file_data: res.Res,
+            //         });
+            //         this.move_screen_ocr();
+            //     })
+            //     .catch(err => {
+            //         console.log('Ocr 문제: ' + err.message, err.code);
+            //         Alert.alert(
+            //             '네트워크 문제',
+            //             '다시 사진을 선택하고 실행해주세요.',
+            //         );
+            //     });
         }
     }
 
@@ -238,6 +245,8 @@ export default class App extends React.Component {
                     <TouchableOpacity style={[styles.touch_btn, { marginBottom: 10, width: 200 }]} onPress={() => this.ocr()} ><Text style={styles.text_btn}>텍스트 추출하기</Text></TouchableOpacity>
                     <TouchableOpacity style={[styles.touch_btn, { width: 120 }]} onPress={() => this.get_all_keys()} ><Text style={styles.text_btn}>저장소</Text></TouchableOpacity>
                 </View>
+                {this.state.loading_flag ?
+                    <Loading /> : <></>}
             </View>
         );
     }
