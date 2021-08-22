@@ -22,12 +22,13 @@ export default class App extends React.Component {
             file_size: null,
             file_base64: null,
             file_name: null,
-            file_data: '가나다라마바사아자차카타파하',
-            // file_data: null,
+            // file_data: '가나다라마바사아자차카타파하',
+            file_data: null,
             all_key: null,
             all_data: null,
             subject: null,
             loading_flag: false,
+            send_flag: false,
         }
     }
 
@@ -59,6 +60,7 @@ export default class App extends React.Component {
 
     chooseImage() {
         console.log('choose image called');
+        this.setState({ send_flag: true })
         launchImageLibrary(image_option, (response) => {
             if (response.didCancel) {
                 console.log('User cancelled image picker');
@@ -97,6 +99,7 @@ export default class App extends React.Component {
     }
     editImage() {
         console.log('edit image called');
+        // this.setState({ send_flag: true });
         ImagePicker.openCropper({
             path: this.state.file_uri,
             width: 1024,
@@ -108,6 +111,7 @@ export default class App extends React.Component {
                 file_uri: image.path,
                 file_size: image.size,
                 file_base64: image.data,
+                send_flag: true,
             });
         }).catch((err) => {
             console.log('!!! edit error');
@@ -127,18 +131,17 @@ export default class App extends React.Component {
                     text: '아니오',
                 },
             ],
-            {
-                cancelable: true,
-            }
         );
 
-    shouldComponentUpdate(prevProps, prevState) {
-        return this.state.file_uri != prevState.file_uri;
-    }
+    // shouldComponentUpdate(prevProps, prevState) {
+    //     return this.state.file_uri != prevState.file_uri;
+    // }
 
     render_image() {
         if (this.state.file_uri) {
-            this.send_image();
+            if (this.state.send_flag) {
+                this.send_image();
+            }
             return (
                 <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.edit_alert()} >
                     <Image source={{ uri: this.state.file_uri }} style={styles.images} />
@@ -177,9 +180,11 @@ export default class App extends React.Component {
             .then(res => res.json())
             .then(res => {
                 console.log(res.message);
+                this.setState({ send_flag: false });
             })
             .catch(err => {
                 console.log('send image 문제: ' + err.message, err.code);
+                this.setState({ send_flag: false });
             });
     }
     ocr() {
@@ -192,42 +197,36 @@ export default class App extends React.Component {
                         text: 'OK'
                     }
                 ],
-                {
-                    cancelable: true,
-                }
             );
         }
         else {
-            this.setState({loading_flag: true});
+            this.setState({ loading_flag: true });
             console.log('ocr called');
-            setTimeout(() => {
-                // this.setState({loading_flag: false});
-                this.move_screen_ocr();
-            }, 3000);
-            // fetch('/ocr', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-type': 'application/json',
-            //         'Accept': 'application/json',
-            //     },
-            //     body: JSON.stringify({
-            //         name: this.state.file_name,
-            //     }),
-            // })
-            //     .then(res => res.json())
-            //     .then(res => {
-            //         this.setState({
-            //             file_data: res.Res,
-            //         });
-            //         this.move_screen_ocr();
-            //     })
-            //     .catch(err => {
-            //         console.log('Ocr 문제: ' + err.message, err.code);
-            //         Alert.alert(
-            //             '네트워크 문제',
-            //             '다시 사진을 선택하고 실행해주세요.',
-            //         );
-            //     });
+            fetch('/ocr', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: this.state.file_name,
+                }),
+            })
+                .then(res => res.json())
+                .then(res => {
+                    this.setState({
+                        file_data: res.Res,
+                        loading_flag: false
+                    });
+                    this.move_screen_ocr();
+                })
+                .catch(err => {
+                    console.log('Ocr 문제: ' + err.message, err.code);
+                    Alert.alert(
+                        '네트워크 문제',
+                        '다시 사진을 선택하고 실행해주세요.',
+                    );
+                });
         }
     }
 
