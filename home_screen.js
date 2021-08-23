@@ -6,8 +6,6 @@ import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from './loading';
 
-import * as RNFS from 'react-native-fs';
-
 const image_option = {
     quality: 1,
     includeBase64: true,
@@ -22,7 +20,6 @@ export default class App extends React.Component {
             file_size: null,
             file_base64: null,
             file_name: null,
-            // file_data: '가나다라마바사아자차카타파하',
             file_data: null,
             all_key: null,
             all_data: null,
