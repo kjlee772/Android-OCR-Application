@@ -75,6 +75,9 @@ export default class ocr_screen extends React.Component {
         }
     }
     // 저장소에서 ocr로 갔을 때 뒤로 가기 막기
+
+
+    // 텍스트 요약 모듈 추가해서 텍스트 요약 구현하기
     
 
     render() {

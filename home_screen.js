@@ -163,7 +163,7 @@ export default class App extends React.Component {
 
     send_image() {
         console.log('send image called');
-        fetch('/sendImage', {
+        fetch('서버 주소 입력', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
@@ -199,7 +199,7 @@ export default class App extends React.Component {
         else {
             this.setState({ loading_flag: true });
             console.log('ocr called');
-            fetch('/ocr', {
+            fetch('서버 주소 입력', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
