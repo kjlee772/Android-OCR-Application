@@ -96,7 +96,6 @@ export default class App extends React.Component {
     }
     editImage() {
         console.log('edit image called');
-        // this.setState({ send_flag: true });
         ImagePicker.openCropper({
             path: this.state.file_uri,
             width: 1024,
