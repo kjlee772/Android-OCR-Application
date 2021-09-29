@@ -77,6 +77,7 @@ export default class App extends React.Component {
     }
     launchCamera() {
         console.log('launch camera called');
+        this.setState({ send_flag: true })
         launchCamera(image_option, (response) => {
             if (response.didCancel) {
                 console.log('User cancelled image picker');
