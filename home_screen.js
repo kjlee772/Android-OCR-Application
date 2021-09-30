@@ -72,6 +72,7 @@ export default class App extends React.Component {
                     file_base64: response['assets'][0].base64,
                     file_name: response['assets'][0].fileName,
                 });
+                this.send_image();
             }
         });
     }
@@ -92,6 +93,7 @@ export default class App extends React.Component {
                     file_base64: response['assets'][0].base64,
                     file_name: response['assets'][0].fileName,
                 });
+                this.send_image();
             }
         });
     }
@@ -110,6 +112,7 @@ export default class App extends React.Component {
                 file_base64: image.data,
                 send_flag: true,
             });
+            this.send_image();
         }).catch((err) => {
             console.log('!!! edit error');
         });
@@ -136,9 +139,6 @@ export default class App extends React.Component {
 
     render_image() {
         if (this.state.file_uri) {
-            if (this.state.send_flag) {
-                this.send_image();
-            }
             return (
                 <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.edit_alert()} >
                     <Image source={{ uri: this.state.file_uri }} style={styles.images} />
@@ -163,6 +163,7 @@ export default class App extends React.Component {
 
     send_image() {
         console.log('send image called');
+        this.setState({ loading_flag: true, });
         fetch('서버 주소 입력', {
             method: 'POST',
             headers: {
@@ -177,11 +178,11 @@ export default class App extends React.Component {
             .then(res => res.json())
             .then(res => {
                 console.log(res.message);
-                this.setState({ send_flag: false });
+                this.setState({ send_flag: false, loading_flag: false });
             })
             .catch(err => {
                 console.log('send image 문제: ' + err.message, err.code);
-                this.setState({ send_flag: false });
+                this.setState({ send_flag: false, loading_flag: false });
             });
     }
     ocr() {
@@ -223,6 +224,9 @@ export default class App extends React.Component {
                         '네트워크 문제',
                         '다시 사진을 선택하고 실행해주세요.',
                     );
+                    this.setState({
+                        loading_flag: false,
+                    })
                 });
         }
     }
